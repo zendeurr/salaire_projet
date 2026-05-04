@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculator 2000 fait par Maxime & Thomsas émoji lunettes de soleil</title>
+
+  <link rel="stylesheet" href="style.css"/>
+
+</head>
+
+<body>
+<div class="page">
+
+  <header>
+    <div class="titre"></div>
+    <span><h1>Simlulateur de salaire, réalisé par Maxime & Thomas</h1></span>
+  </header>
+
+  <div class="contenu">
+
+    <div class="parametres">
+      <h2>Paramètres</h2>
+
+      <div class="para">
+        <label for="brut">Salaire brut (€)</label>
+        <input type="number" id="brut" placeholder="ex : 2500" min="0" value="2500"/>
+      </div>
+
+      <div class="para">
+        <label>Période</label>
+        <div class="radio-group">
+          <input type="radio" name="periode" id="mensuel" value="mensuel" checked/>
+          <label for="mensuel">Mensuel</label>
+          <input type="radio" name="periode" id="annuel" value="annuel"/>
+          <label for="annuel">Annuel</label>
+        </div>
+      </div>
+
+      <div class="para">
+        <label for="contrat">Type de contrat</label>
+        <select id="contrat">
+          <option value="cdi">CDI</option>
+          <option value="cdd">CDD</option>
+          <option value="alternance">Alternance</option>
+          <option value="stage">Stage</option>
+        </select>
+      </div>
+
+      <div class="para">
+        <label>Statut</label>
+        <div class="radio-group">
+          <input type="radio" name="statut" id="non-cadre" value="non-cadre" checked/>
+          <label for="non-cadre">Non-cadre</label>
+          <input type="radio" name="statut" id="cadre" value="cadre"/>
+          <label for="cadre">Cadre</label>
+        </div>
+      </div>
+
+      <div class="para">
+        <label>Temps de travail</label>
+        <div class="radio-group">
+          <input type="radio" name="temps" id="plein" value="1" checked/>
+          <label for="plein">Temps plein</label>
+          <input type="radio" name="temps" id="partiel" value="0.5"/>
+          <label for="partiel">Mi-temps (50%)</label>
+        </div>
+      </div>
+
+      <button class="btn" onclick="calculer()">Calculer →</button>
+    </div>
+  </div>
+
+  <div class="resultats">
+    <h2>Résultats</h2>
+
+    <div class="resultats">
+    <div class="grille">
+        <div class="label">Salaire net perçu</div>
+          <div class="value empty" id="net"></div>
+      </div>
+        <div class="label">Charges salariales</div>
+        <div class="value empty" id="charges-sal"></div>
+      </div>
+
+        <div class="label">Charges patronales</div>
+        <div class="value empty" id="charges-pat"></div>
+      </div>
+
+        <div class="label">Coût total employeur</div>
+        <div class="value empty" id="cout"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="script.js"></script>
+</body>
+</html>
