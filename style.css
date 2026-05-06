@@ -247,6 +247,23 @@ select:focus {
   border-bottom: 1px solid var(--gris-clair);
 }
 
+.historique-item {
+  border-bottom: 1px solid var(--gris-clair);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+.historique-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.historique-detail {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: var(--gris-texte);
+}
+
 @media (max-width: 660px) {
   .contenu {
     flex-direction: column;
