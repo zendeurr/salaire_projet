@@ -5,7 +5,7 @@ const TAUX = {
   stage:      { nonCadre: { salarial: 0.00,  patronal: 0.00 }, cadre: { salarial: 0.00,  patronal: 0.00 } }
 };
  
-async function calculer() {
+async function calculer(sauvegarder = true) {
   const brutSaisi  = parseFloat(document.getElementById('brut').value);
   const periode    = document.querySelector('input[name="periode"]:checked').value;
   const contrat    = document.getElementById('contrat').value;
@@ -34,6 +34,10 @@ async function calculer() {
   document.getElementById('charges-pat').textContent = formaterEuros(chargesPatronales);
   document.getElementById('cout').textContent        = formaterEuros(coutEmployeur);
  
+  if (!sauvegarder) {
+    return;
+  }
+ 
   await sauvegarderResultat({
     brut: brutSaisi,
     periode,
@@ -57,7 +61,7 @@ function formaterEuros(valeur) {
  
 async function sauvegarderResultat(resultat) {
   try {
-    const response = await fetch('sauvegarder.php', {
+    const response = await fetch('./sauvegarder.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -65,10 +69,18 @@ async function sauvegarderResultat(resultat) {
       body: JSON.stringify(resultat)
     });
  
+    if (!response.ok) {
+      const texte = await response.text();
+      throw new Error(`HTTP ${response.status}: ${texte}`);
+    }
+ 
     const data = await response.json();
     if (!data.succes) {
       console.error('Erreur de sauvegarde :', data.erreur || 'réponse non valide');
+      return;
     }
+ 
+    await chargerHistorique();
   } catch (error) {
     console.error('Impossible de sauvegarder le résultat :', error);
   }
@@ -78,7 +90,7 @@ async function chargerHistorique() {
   const conteneur = document.getElementById('derniers-resultats');
  
   try {
-    const response = await fetch('charger_historique.php');
+    const response = await fetch('./charger_historique.php');
     const data = await response.json();
  
     if (!data.succes) {
@@ -107,10 +119,10 @@ function afficherHistorique(historique) {
     const tempsLabel = item.temps === '1' || item.temps === 1 ? 'Temps plein' : 'Mi-temps (50%)';
     const statutLabel = item.statut === 'cadre' ? 'Cadre' : 'Non-cadre';
     const dateLabel = item.date_creation ? ` - ${item.date_creation}` : '';
- 
+
     return `
       <div class="historique-item">
-        <strong>${formaterEuros(parseFloat(item.net))}</strong> (${periodeLabel}, ${item.contrat.toUpperCase()}, ${statutLabel}, ${tempsLabel})${dateLabel}
+        <strong>${formaterEuros(parseFloat(item.brut))}</strong> (${periodeLabel}, ${item.contrat.toUpperCase()}, ${statutLabel}, ${tempsLabel})${dateLabel}
         <div class="historique-detail">
           Net: ${formaterEuros(parseFloat(item.net))}, charges salariales: ${formaterEuros(parseFloat(item.charges_salariales || item.chargesSalariales || 0))}, charges patronales: ${formaterEuros(parseFloat(item.charges_patronales || item.chargesPatronales || 0))}
         </div>
@@ -119,6 +131,6 @@ function afficherHistorique(historique) {
 }
  
 window.addEventListener('DOMContentLoaded', () => {
-  calculer();
   chargerHistorique();
+  calculer(false);
 });
